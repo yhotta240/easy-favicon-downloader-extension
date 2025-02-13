@@ -6,38 +6,44 @@ const manifestData = chrome.runtime.getManifest();
 const fileName = document.getElementById('filename-from');
 const filenameCheckbox = document.getElementById('filename-checkbox');
 const fileTypeRadio = document.querySelectorAll('input[name="filetype-radio"]')
+const filenameAddSize = document.getElementById('filename-add-size-checkbox');
 
 let isSaveFilename = false;
 let saveFilename = null;
+let savefilenameAddSize = true;
 
 chrome.storage.local.get(['settings'], (data) => {
   const settings = data.settings || {};
-  console.log("settings", settings);
+  // console.log("settings", settings);
   loading(settings);
   chrome.storage.local.set({ settings: settings });
 });
 
 function loading(settings) {
   const fileType = settings.fileType || 'png';
-  console.log("fileTypeRadio", fileTypeRadio, fileType);
   isSaveFilename = settings.saveFilename || false;
   saveFilename = settings.fileName || null;
+  savefilenameAddSize = settings.filenameAddSize;
+
   filenameCheckbox.checked = settings.saveFilename;
   filenameCheckbox.addEventListener('change', () => {
     settings.saveFilename = filenameCheckbox.checked;
     settings.fileName = document.getElementById('filename-from').value;
-    console.log("settings", settings);
     chrome.storage.local.set({ settings: settings });
   });
+
+  filenameAddSize.checked = savefilenameAddSize;
+  filenameAddSize.addEventListener('change', () => {
+    settings.filenameAddSize = filenameAddSize.checked;
+    chrome.storage.local.set({ settings: settings });
+  });
+
   fileTypeRadio.forEach((radio) => {
-    console.log("radio", radio);
     if (radio.value === fileType) {
       radio.checked = true;
     }
     radio.addEventListener('change', () => {
-      console.log("radio", radio);
       settings.fileType = radio.value;
-      console.log("settings", settings);
       chrome.storage.local.set({ settings: settings });
     });
   });
@@ -47,8 +53,6 @@ function loading(settings) {
 document.addEventListener('DOMContentLoaded', function () {
   const siteUrlFrom = document.getElementById('site-url-from');
   const siteUrlButton = document.getElementById('site-url-button');
-
-  console.log("fileName", fileName);
   const faviconSizes = [16, 32, 64, 128];
 
   // ファビコンURLを更新する関数
@@ -60,21 +64,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const faviconUrl = `${faviconBaseUrl}${size}`;
       img.src = faviconUrl;
       img.parentElement.style.visibility = 'hidden';
-      console.log("img", img);
       getImageMetadata(faviconUrl)
         .then(metadata => {
-          console.log("metadata", metadata);
           if (!metadata) return;
-          console.log(`ファビコンの組み込みサイズ: ${metadata.width}x${metadata.height}`, size !== metadata.height);
           // サイズが一致しない場合は非表示にする
           if (size === metadata.width || size === metadata.height) {
-            console.log("img.parentElement", img.parentElement);
             img.parentElement.style.visibility = 'visible';
           }
-        })
-        .catch(err => {
-        })
-        ;
+        });
     });
   }
 
@@ -85,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
         siteUrlFrom.value = siteUrl;
         const hostname = new URL(siteUrl).hostname;
         const filename_header = hostname.replace(/\./g, '_');
-        console.log("filename_header", filename_header);
         if (isSaveFilename) {
           fileName.value = saveFilename;
         } else {
@@ -116,19 +112,17 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll("a[data-size]").forEach(link => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
-      console.log("link", link, fileName.value);
       const size = link.getAttribute("data-size");
       const fileNameValue = document.getElementById('filename-from').value;
+      const savefilenameAddSize = document.getElementById('filename-add-size-checkbox').checked;
 
       // チェックされたラジオボタンの値を取得
       const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
-      console.log(fileType);  // 例えば "png" などが出力されます
       const img = document.getElementById(`favicon-${size}`);
       const url = img.src;
-      console.log("url", url);
+      // console.log("url", url);
 
       if (!url) {
-        alert("アイコンが取得できませんでした。");
         return;
       }
 
@@ -138,13 +132,13 @@ document.addEventListener('DOMContentLoaded', function () {
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `${fileNameValue}-${size}.${fileType}`;
+          a.download = savefilenameAddSize ? `${fileNameValue}_${size}x${size}.${fileType}` : `${fileNameValue}.${fileType}`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url); // メモリ解放
         })
-        .catch(error => console.error("アイコンのダウンロードに失敗:", error));
+        .catch(error => console.log("アイコンのダウンロードに失敗しました"));
     });
   });
 
