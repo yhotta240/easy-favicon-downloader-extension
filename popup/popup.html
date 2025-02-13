@@ -30,8 +30,8 @@
         aria-controls="description" aria-selected="false">概要</a>
     </li>
     <li class="nav-item " role="presentation">
-      <a class="nav-link p-1" id="tutorial-tab" data-bs-toggle="tab" href="#tutorial" role="tab"
-        aria-controls="tutorial" aria-selected="false">チュートリアル</a>
+      <a class="nav-link p-1" id="document-tab" data-bs-toggle="tab" href="#document" role="tab"
+        aria-controls="document" aria-selected="false">ドキュメント</a>
     </li>
     <li class="nav-item" role="presentation">
       <a class="nav-link  p-1" id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info"
@@ -86,6 +86,14 @@
         </li>
         <li class="list-group-item ">
           <p class="m-0 fw-bold my-2">プレビュー表示</p>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="filename-add-size-checkbox">
+            <label class="form-check-label" for="filename-add-size-checkbox">
+              ファイル名の末尾にサイズを付ける
+            </label>
+          </div>
+
           <ul class="list-group">
             <li class="list-group-item d-flex align-items-center">
               <img id="favicon-16" src="" class="border rounded me-3" width="16" height="16">
@@ -154,9 +162,9 @@
     <!-- 概要 -->
     <div class="tab-pane fade mt-2 mx-2" id="description" role="tabpanel" style="margin-bottom: 200px;"
       aria-labelledby="description-tab">
-      <div>
+      <div class="p-2">
         <h5>概要</h5>
-        <p>WEBサイト</p>
+        <p>WEBサイトのファビコン（Favicon）を簡単にダウンロードできます</p>
         <p class="my-1 fw-bold">説明:</p>
         <p>
           WEBサイトのファビコン（Favicon）を取得し，簡単にダウンロードできます．指定した URL のファビコンを複数のサイズで表示し，好みの形式（PNG，JPG，ICO）で保存可能です．
@@ -186,7 +194,8 @@
         <div class="mt-1">
           <ul>
             <li>
-              ⚠ Google の Favicon API 依存: Google のファビコン取得API（<a href="https://www.google.com/s2/favicons" target="_blank" class="text-wrap">https://www.google.com/s2/favicons</a>）を使用しているため，一部のサイトでは正確なファビコンが取得できない可能性があります．
+              ⚠ Google の Favicon API 依存: Google のファビコン取得API（<a href="https://www.google.com/s2/favicons" target="_blank"
+                class="text-wrap">https://www.google.com/s2/favicons</a>）を使用しているため，一部のサイトでは正確なファビコンが取得できない可能性があります．
             </li>
             <li>
               ⚠ Webサイトによる制約: 特定のサイトではファビコンのサイズやフォーマットが制限されている場合があります．
@@ -201,43 +210,96 @@
 
 
 
-    <!-- チュートリアル -->
-    <div class="tab-pane fade mt-2 mx-2" id="tutorial" role="tabpanel" style="margin-bottom: 200px;"
-      aria-labelledby="tutorial-tab">
-      <p class="mb-1 fw-bold">
-        Sampleを有効にする
-      </p>
-      <ul class="m-1">
-        <li>拡張機能のポップアップを開き，「Sampleを有効にする」のトグルボタンをクリック</li>
-        <li> </li>
-        <li></li>
-      </ul>
-      <div class="mb-3">無効にする場合も同じ操作を行ってください。</div>
-      <p class="mb-1 fw-bold">
-        設定
-      </p>
-      <ul>
-        <li>
+    <!-- ドキュメント -->
+    <div class="tab-pane fade mt-2 mx-2" id="document" role="tabpanel" style="margin-bottom: 200px;"
+      aria-labelledby="document-tab">
+      <div class="accordion" id="accordion-word">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              用語集
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body p-1 pt-3">
+              <ul class="">
+                <li class="mb-1">
+                  <div class="fw-bold">ファビコン：favicon</div>
+                  ブラウザのタブや検索結果画面に表示される小さなアイコンのことを指す．「favorite icon（お気に入りのアイコン）」の略称．
+                </li>
+                <li class="mb-1">
+                  <div class="fw-bold">PNG（Portable Network Graphics）: </div>
+                  透過背景をサポートする画像形式
+                </li>
+                <li class="mb-1">
+                  <div class="fw-bold">JPG（JPEG, Joint Photographic Experts Group）：</div>
+                  圧縮率が高く，写真などに適した画像形式
+                </li>
+                <li class="mb-1">
+                  <div class="fw-bold">ICO（Icon File）: </div>
+                  Windows でアイコンとして使用されるファイル形式
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOTwo"
+              aria-expanded="true" aria-controls="collapseTwo">
+              チュートリアル
+            </button>
+          </h2>
+          <div id="collapseOTwo" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body p-3">
+              <p class="mb-2 fw-bold">
+                1. Chrome ウェブストアから拡張機能をインストール
+              </p>
 
-        </li>
-        <li>
+              <p class="mb-1 fw-bold">
+                2. ファビコンをダウンロードする
+              </p>
+              <div>
+                <div>① Chrome でファビコンを取得したい WEBサイト を開く</div>
+                <div>② その状態で拡張機能をクリックしてポップアップを開く</div>
+                <div>③ ファイル形式を変更する（オプション）</div>
+                ポップアップ内の「ファイル形式の選択」で，ダウンロード形式を PNG，JPG，ICO から選択可能．
+                <ul>
+                  <li>デフォルトは PNG 形式</li>
+                  <li>変更したい場合は ラジオボタンをクリック して選択</li>
+                </ul>
+                <div>④ ファビコンをダウンロードする</div>
+                <ol>
+                  <li>
+                    各サイズ（16px，32px，64px，128px など）のプレビュー画像が表示される
+                  </li>
+                  <li>
+                    取得したいサイズのファビコンの隣にある「ダウンロードボタン」をクリックしてダウンロード
+                  </li>
+                </ol>
+                <div>補足: 特定のサイトのファビコンを取得したい場合，ポップアップ内のURL入力欄に WEBサイトのURL を入力することでファビコンを取得できます．</div>
+              </div>
 
-        </li>
-        <li>
-
-        </li>
-      </ul>
-      <p class="mb-1 fw-bold">
-        操作方法
-      </p>
-      <ul>
-        <li>
-
-        </li>
-        <li>
-
-        </li>
-      </ul>
+              <p class="mb-1 mt-2 fw-bold">
+                注意点
+              </p>
+              <ul>
+                <li class="mb-1">
+                  Google のファビコン取得API（<a href="https://www.google.com/s2/favicons" target="_blank"
+                    class="text-wrap">https://www.google.com/s2/favicons</a>）を使用しているため，一部のサイトでは正確なファビコンが取得できない可能性があります．
+                </li>
+                <li class="mb-1">
+                  特定のサイトではファビコンのサイズやフォーマットが制限されている場合があります．
+                </li>
+                <li class="mb-1">
+                  アクティブなタブの URL を取得するための権限を最小限に抑えていますが，一部の環境では動作しない可能性があります．
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 詳細情報 -->
@@ -297,16 +359,16 @@
         </li>
         <li class="list-group-item">
           <p class="m-0">提供元: </p>
-          <p class="m-0"> </p>
+          <p class="m-0">yhotta240 </p>
         </li>
         <li class="list-group-item">
           <p class="m-0">デベロッパー: </p>
-          <p class="m-0">example@example.com </p>
+          <p class="m-0">yhotta240@example.com </p>
         </li>
         <li class="list-group-item">
           <p class="m-0">GitHub: </p>
           <a class="m-0" id="github-link"
-            href="https://github.com/yhotta240/easy-web-starter-kit-jp">https://github.com/yhotta240/easy-web-starter-kit-jp
+            href="https://github.com/yhotta240/easy-favicon-downloader-extension">https://github.com/yhotta240/easy-favicon-downloader-extension
           </a>
         </li>
         <li class="list-group-item">
