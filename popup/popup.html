@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="jp ">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="title">Sample - サンプル</title>
+  <link rel="stylesheet" href="bootstrap-5.3.0-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body class="container pb-3 p-2 ">
+  <div class="d-flex  my-2 ">
+    <img src="../icons/icon.png" class="my-auto mx-2" alt="message clear button" height="28">
+    <h3 class="my-auto fs-3" id="title-header"></h3>
+  </div>
+
+  <!-- メニュータブ -->
+  <ul class="nav nav-underline mb-2 mx-1" id="myTab" role="tablist">
+    <li class="nav-item " role="presentation">
+      <a class="nav-link active p-1" id="download-tabs" data-bs-toggle="tab" href="#download" role="tab"
+        aria-controls="download " aria-selected="true">ダウンロード</a>
+    </li>
+    <!-- <li class="nav-item " role="presentation">
+      <a class="nav-link p-1" id="downloads-tabs" data-bs-toggle="tab" href="#downloads" role="tab"
+        aria-controls="downloads" aria-selected="false">一括</a>
+    </li> -->
+    <li class="nav-item" role="presentation">
+      <a class="nav-link p-1" id="description-tab" data-bs-toggle="tab" href="#description" role="tab"
+        aria-controls="description" aria-selected="false">概要</a>
+    </li>
+    <li class="nav-item " role="presentation">
+      <a class="nav-link p-1" id="tutorial-tab" data-bs-toggle="tab" href="#tutorial" role="tab"
+        aria-controls="tutorial" aria-selected="false">チュートリアル</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link  p-1" id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info"
+        aria-selected="false">情報</a>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+
+    <!-- ダウンロード -->
+    <div class="tab-pane fade mt-2 mx-2 show active" id="download" role="tabpanel" style="margin-bottom: 180px;"
+      aria-labelledby="download">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <p class="m-0 fw-bold">URL</p>
+          <div class="input-group-sm input-group">
+            <input class="form-control form-control-sm" type="text" placeholder="URLを入力"
+              aria-label=".form-control-sm example" id="site-url-from">
+            <button type="button" id="site-url-button" class="btn btn-outline-secondary btn-sm ">現在のサイト</button>
+          </div>
+
+          <p class="m-0 fw-bold mt-2">ファイル名:</p>
+          <input class="form-control form-control-sm" type="text" placeholder="ファイル名を入力"
+            aria-label=".form-control-sm example" id="filename-from">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="filename-checkbox">
+            <label class="form-check-label" for="filename-checkbox">
+              ファイル名を記憶する
+            </label>
+          </div>
+
+          <p class="m-0 fw-bold me-3 mt-2">ファイル形式</p>
+          <div class="">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input " type="radio" name="filetype-radio" id="png-radio" value="png">
+              <label class="form-check-label" for="png-radio">PNG</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input " type="radio" name="filetype-radio" id="jpg-radio" value="jpg">
+              <label class="form-check-label" for="jpg-radio">JPG</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="filetype-radio" id="ico-radio" value="ico">
+              <label class="form-check-label" for="ico-radio">ICO</label>
+            </div>
+            <!-- <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="filetype-radio" id="svg-radio" value="svg">
+              <label class="form-check-label" for="svg-radio">SVG</label>
+            </div> -->
+          </div>
+
+        </li>
+        <li class="list-group-item ">
+          <p class="m-0 fw-bold my-2">プレビュー表示</p>
+          <ul class="list-group">
+            <li class="list-group-item d-flex align-items-center">
+              <img id="favicon-16" src="" class="border rounded me-3" width="16" height="16">
+              <span class="flex-grow-1">16x16</span>
+              <a href="#" data-size="16" class="text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-download" viewBox="0 0 16 16">
+                  <path
+                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                  <path
+                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                </svg>
+              </a>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <img id="favicon-32" src="" class="border rounded me-3" width="32" height="32">
+              <span class="flex-grow-1">32x32</span>
+              <a href="#" data-size="32" class="text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-download" viewBox="0 0 16 16">
+                  <path
+                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                  <path
+                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                </svg>
+              </a>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <img id="favicon-64" src="" class="border rounded me-3" width="64" height="64">
+              <span class="flex-grow-1">64x64</span>
+              <a href="#" data-size="64" class="text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-download" viewBox="0 0 16 16">
+                  <path
+                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                  <path
+                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                </svg>
+              </a>
+            </li>
+            <li class="list-group-item d-flex align-items-center">
+              <img id="favicon-128" src="" class="border rounded me-3" width="128" height="128">
+              <span class="flex-grow-1">128x128</span>
+              <a href="#" data-size="128" class="text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-download" viewBox="0 0 16 16">
+                  <path
+                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                  <path
+                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+
+        </li>
+      </ul>
+    </div>
+
+    <!-- 一括 -->
+    <div class="tab-pane fade mt-2 mx-2" id="downloads" role="tabpanel" style="margin-bottom: 200px;"
+      aria-labelledby="downloads-tab">
+
+    </div>
+
+    <!-- 概要 -->
+    <div class="tab-pane fade mt-2 mx-2" id="description" role="tabpanel" style="margin-bottom: 200px;"
+      aria-labelledby="description-tab">
+      <div>
+        <h5>概要</h5>
+        <p>WEBサイト</p>
+        <p class="my-1 fw-bold">説明:</p>
+        <p>
+          WEBサイトのファビコン（Favicon）を取得し，簡単にダウンロードできます．指定した URL のファビコンを複数のサイズで表示し，好みの形式（PNG，JPG，ICO）で保存可能です．
+        </p>
+        <p class="my-1 fw-bold">拡張機能の主な特徴:</p>
+        <div class="mt-1">
+          <ul>
+            <li>
+              ファビコンの取得: 指定したWEBサイトのファビコンを自動で取得し，表示します．
+            </li>
+            <li>
+              複数サイズ対応: 16px，32px，64px，128px など，さまざまなサイズのファビコンを取得可能．
+            </li>
+            <li>
+              形式の選択: PNG / JPG / ICO 形式でダウンロード可能．
+            </li>
+            <li>
+              アクティブタブの自動取得: 現在開いているWEBサイトのファビコンをワンクリックで取得できる．
+            </li>
+            <li>
+              手動URL入力対応: 任意の URL を入力してファビコンを取得することも可能．
+            </li>
+          </ul>
+        </div>
+        <p class="my-1 fw-bold">注意点:</p>
+
+        <div class="mt-1">
+          <ul>
+            <li>
+              ⚠ Google の Favicon API 依存: Google のファビコン取得API（<a href="https://www.google.com/s2/favicons" target="_blank" class="text-wrap">https://www.google.com/s2/favicons</a>）を使用しているため，一部のサイトでは正確なファビコンが取得できない可能性があります．
+            </li>
+            <li>
+              ⚠ Webサイトによる制約: 特定のサイトではファビコンのサイズやフォーマットが制限されている場合があります．
+            </li>
+            <li>
+              ⚠ ブラウザの権限設定: アクティブなタブの URL を取得するための権限を最小限に抑えていますが，一部の環境では動作しない可能性があります．
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- チュートリアル -->
+    <div class="tab-pane fade mt-2 mx-2" id="tutorial" role="tabpanel" style="margin-bottom: 200px;"
+      aria-labelledby="tutorial-tab">
+      <p class="mb-1 fw-bold">
+        Sampleを有効にする
+      </p>
+      <ul class="m-1">
+        <li>拡張機能のポップアップを開き，「Sampleを有効にする」のトグルボタンをクリック</li>
+        <li> </li>
+        <li></li>
+      </ul>
+      <div class="mb-3">無効にする場合も同じ操作を行ってください。</div>
+      <p class="mb-1 fw-bold">
+        設定
+      </p>
+      <ul>
+        <li>
+
+        </li>
+        <li>
+
+        </li>
+        <li>
+
+        </li>
+      </ul>
+      <p class="mb-1 fw-bold">
+        操作方法
+      </p>
+      <ul>
+        <li>
+
+        </li>
+        <li>
+
+        </li>
+      </ul>
+    </div>
+
+    <!-- 詳細情報 -->
+    <div class="tab-pane fade mt-2 mx-2" id="info" role="tabpanel" style="margin-bottom: 200px;"
+      aria-labelledby="info-tab">
+      <ul class="list-group list-group-flush">
+        <h5 class="pt-3 ps-2 mb-2">詳細</h5>
+
+        <li class="list-group-item">
+          <ul>
+            <li>
+              <a class="" href="https://chromewebstore.google.com/" id="store_link">
+                ストアページに移動
+              </a>
+            </li>
+            <li>
+              <a href="" id="extension_link">この拡張機能を管理する</a>
+            </li>
+            <li>
+              <a href="https://forms.gle/" id="issue-link">問題を報告する</a>
+            </li>
+          </ul>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">名前:</p>
+          <p class="m-0" id="extension-name"></p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">説明: </p>
+
+          <p class="m-0" id="extension-description"></p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">バージョン: </p>
+          <p class="m-0" id="extension-version"></p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">ID: </p>
+          <p class="m-0" id="extension-id"></p>
+        </li>
+        <li class="list-group-item">
+          <p>権限</p>
+        </li>
+        <li class="list-group-item">
+          <p>サイトへのアクセス:</p>
+          <p id="permission-info">アクセスしたWEBサイト上にある自分の全データの読み取りと変更をこの拡張機能に許可します。</p>
+          <span id="site-access">Checking...</span>
+        </li>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">シークレット モードでの実行を許可する: </p>
+          <p class="m-0" id="incognito-enabled"></p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">言語: </p>
+          <p class="m-0">日本語 </p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">提供元: </p>
+          <p class="m-0"> </p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">デベロッパー: </p>
+          <p class="m-0">example@example.com </p>
+        </li>
+        <li class="list-group-item">
+          <p class="m-0">GitHub: </p>
+          <a class="m-0" id="github-link"
+            href="https://github.com/yhotta240/easy-web-starter-kit-jp">https://github.com/yhotta240/easy-web-starter-kit-jp
+          </a>
+        </li>
+        <li class="list-group-item">
+        </li>
+      </ul>
+      <div class="ps-0 " style="margin-bottom: 180px;">
+        <h5 class="ps-1">プライバシー</h5>
+        <p class="ps-3">お客様のデータを収集または使用しないことを表明しています。</p>
+        <p class="ps-3">お客様のデータについて以下を宣言します。</p>
+        <div class="m-2">
+          <ul>
+            <li>
+              承認されている以外の用途で第三者に販売しないこと
+            </li>
+            <li>
+              アイテムの中心機能と関係のない目的で使用または転送しないこと
+            </li>
+            <li>
+              信用力を判断する目的または融資目的で使用または転送しないこと
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- 固定フッターとしての開閉パネル -->
+  <div class="fixed-bottom bg-dark text-white">
+    <button class="btn btn-dark btn-sm p-0 w-100" id="panelButton" style="font-size: 10px;">
+      メッセージパネルを開く
+    </button>
+    <!-- メッセージ -->
+    <div id="messagePanel" class="bg-light text-dark p-1 overflow-auto">
+      <div class="d-flex justify-content-between">
+        <div class="fw-light py-auto">メッセージ</div>
+        <button type="button" class="btn btn-light btn-sm" id="messageClearButton">
+          <img src="../icons/list_clear.png" alt="message clear button" height="20">
+        </button>
+      </div>
+
+      <div id="message" class="h-100" style="border: 1px solid #ccc; padding: 10px;"></div>
+    </div>
+  </div>
+
+
+  <!-- スクリプトのリンク -->
+  <script src="bootstrap-5.3.0-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="popup.js"></script>
+</body>

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "簡単ファビコンダウンロード - Easy Favicon Downloader",
+  "version": "0.0.1",
+  "description": "WEBサイトのファビコン（Favicon）を簡単にダウンロードできます",
+  "icons": {
+    "48": "icons/icon.png"
+  },
+  "permissions": ["contextMenus", "storage", "tabs"],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

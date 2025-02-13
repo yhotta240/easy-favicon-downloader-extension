@@ -1,0 +1,16 @@
+html {
+  font-size: 0.8rem;
+}
+
+html,
+body {
+  width: 28rem;
+  min-width: 28rem;
+  margin: 0;
+}
+
+#messagePanel {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
