@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "簡単ファビコンダウンロード - Easy Favicon Downloader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "WEBサイトのファビコン（Favicon）を簡単にダウンロードできます",
   "icons": {
     "48": "icons/icon.png"
