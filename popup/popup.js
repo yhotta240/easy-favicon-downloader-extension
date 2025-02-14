@@ -53,7 +53,7 @@ function loading(settings) {
 document.addEventListener('DOMContentLoaded', function () {
   const siteUrlFrom = document.getElementById('site-url-from');
   const siteUrlButton = document.getElementById('site-url-button');
-  const faviconSizes = [16, 32, 64, 128];
+  const faviconSizes = [16, 32, 48, 64, 96, 128];
 
   // ファビコンURLを更新する関数
   function updateFaviconUrls(siteUrl) {
