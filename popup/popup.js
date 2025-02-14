@@ -7,6 +7,7 @@ const fileName = document.getElementById('filename-from');
 const filenameCheckbox = document.getElementById('filename-checkbox');
 const fileTypeRadio = document.querySelectorAll('input[name="filetype-radio"]')
 const filenameAddSize = document.getElementById('filename-add-size-checkbox');
+const faviconSizes = [16, 32, 48, 64, 96, 128];
 
 let isSaveFilename = false;
 let saveFilename = null;
@@ -26,15 +27,18 @@ function loading(settings) {
   savefilenameAddSize = settings.filenameAddSize;
 
   filenameCheckbox.checked = settings.saveFilename;
+
   filenameCheckbox.addEventListener('change', () => {
     settings.saveFilename = filenameCheckbox.checked;
     settings.fileName = document.getElementById('filename-from').value;
+    messageOutput(dateTime(), `ファイル名: ${settings.fileName}${settings.saveFilename ? '（記憶する）' : ''}に変更`);
     chrome.storage.local.set({ settings: settings });
   });
 
   filenameAddSize.checked = savefilenameAddSize;
   filenameAddSize.addEventListener('change', () => {
     settings.filenameAddSize = filenameAddSize.checked;
+    messageOutput(dateTime(), `ファイル名の末尾にサイズを${settings.filenameAddSize ? "付ける" : "付けない"} に変更`);
     chrome.storage.local.set({ settings: settings });
   });
 
@@ -44,6 +48,7 @@ function loading(settings) {
     }
     radio.addEventListener('change', () => {
       settings.fileType = radio.value;
+      messageOutput(dateTime(), `ファイル形式: ${radio.value} に変更 `);
       chrome.storage.local.set({ settings: settings });
     });
   });
@@ -53,18 +58,18 @@ function loading(settings) {
 document.addEventListener('DOMContentLoaded', function () {
   const siteUrlFrom = document.getElementById('site-url-from');
   const siteUrlButton = document.getElementById('site-url-button');
-  const faviconSizes = [16, 32, 48, 64, 96, 128];
+
 
   // ファビコンURLを更新する関数
   function updateFaviconUrls(siteUrl) {
     const faviconBaseUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=`;
 
-    faviconSizes.forEach(size => {
+    faviconSizes.forEach((size, index) => {
       const img = document.getElementById(`favicon-${size}`);
       const faviconUrl = `${faviconBaseUrl}${size}`;
       img.src = faviconUrl;
       img.parentElement.style.visibility = 'hidden';
-      getImageMetadata(faviconUrl)
+      getImageMetadata(faviconUrl, index)
         .then(metadata => {
           if (!metadata) return;
           // サイズが一致しない場合は非表示にする
@@ -80,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     getActiveTabUrl(function (siteUrl) {
       if (siteUrl) {
         siteUrlFrom.value = siteUrl;
+        messageOutput(dateTime(), `URL: ${siteUrl} の各サイズのファビコンを取得します`);
         const hostname = new URL(siteUrl).hostname;
         const filename_header = hostname.replace(/\./g, '_');
         if (isSaveFilename) {
@@ -97,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
   siteUrlFrom.addEventListener('input', () => {
     const siteUrl = siteUrlFrom.value;
     const hostname = new URL(siteUrl).hostname;
+    messageOutput(dateTime(), `URL: ${hostname} の各サイズのファビコンを取得します`);
     fileName.value = hostname.replace(/\./g, '_');
     if (siteUrl) {
       updateFaviconUrls(siteUrl);
@@ -106,25 +113,37 @@ document.addEventListener('DOMContentLoaded', function () {
   // 初回処理（タブURLが取得できた場合に実行）
   getActiveTabUrlAndProcess();
 
+  setTimeout(() => {
+    const fname = document.getElementById('filename-from').value;
+    const isFnameCheck = document.getElementById('filename-checkbox').checked;
+    const isFnameAddSize = document.getElementById('filename-add-size-checkbox').checked;
+    const radioValue = document.querySelector('input[name="filetype-radio"]:checked').value;
+    messageOutput(dateTime(), `URL: ${fname}`);
+    messageOutput(dateTime(), `ファイル名: ${fname} ${isFnameCheck ? '（記憶する）' : ''}`);
+    messageOutput(dateTime(), `ファイル形式: ${radioValue}`);
+    if (isFnameAddSize) {
+      messageOutput(dateTime(), `ファイル名の末尾にサイズを付ける`);
+    }
+    messageOutput(dateTime(), `ファイル（例）: ${isFnameAddSize ? fname + "_16x16." + radioValue : fname + "." + radioValue}`);
+  }, 100);
 
-
-  // アイコンのダウンロード処理
+  // ファビコンのダウンロード処理
   document.querySelectorAll("a[data-size]").forEach(link => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       const size = link.getAttribute("data-size");
       const fileNameValue = document.getElementById('filename-from').value;
       const savefilenameAddSize = document.getElementById('filename-add-size-checkbox').checked;
+      const siteUrl = document.getElementById('site-url-from').value;;
+      const baseUrl = new URL(siteUrl).origin;
 
       // チェックされたラジオボタンの値を取得
       const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
       const img = document.getElementById(`favicon-${size}`);
-      const url = img.src;
+      const imgUrl = img.src;
       // console.log("url", url);
 
-      if (!url) {
-        return;
-      }
+      if (!imgUrl) return;
 
       fetch(img.src, { mode: 'cors' }) // CORS対応
         .then(response => response.blob())
@@ -137,8 +156,11 @@ document.addEventListener('DOMContentLoaded', function () {
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url); // メモリ解放
+          messageOutput(dateTime(), `${baseUrl}のサイズ${size}のファビコンをダウンロードしました`);
         })
-        .catch(error => console.log("アイコンのダウンロードに失敗しました"));
+        .catch(error => {
+          messageOutput(dateTime(), `サイズ${size}のファビコンのダウンロードに失敗しました`);
+        });
     });
   });
 
@@ -239,16 +261,19 @@ function getActiveTabUrl(callback) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length === 0) return;
     const url = tabs[0].url;
-    const baseUrl = new URL(url).origin
+    const baseUrl = new URL(url).origin;
     callback(baseUrl);
   });
 }
 
-function getImageMetadata(imageUrl) {
+function getImageMetadata(imageUrl, index) {
   return fetch(imageUrl)
     .then(response => {
       if (!response.ok) {
-        console.log('画像の取得に失敗しました');
+        if (index === faviconSizes.length - 1) {
+          console.log('画像の取得に失敗しました');
+          messageOutput(dateTime(), '画像の取得に失敗しました');
+        }
       }
       // 画像のバイナリデータを取得
       return response.arrayBuffer();
