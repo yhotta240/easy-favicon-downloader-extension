@@ -58,9 +58,6 @@ function loading(settings) {
 document.addEventListener('DOMContentLoaded', function () {
   const siteUrlFrom = document.getElementById('site-url-from');
   const siteUrlButton = document.getElementById('site-url-button');
-
-
-  // ファビコンURLを更新する関数
   function updateFaviconUrls(siteUrl) {
     const faviconBaseUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=`;
 
@@ -80,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // 現在のタブのURLを取得して処理を行う
   function getActiveTabUrlAndProcess() {
     getActiveTabUrl(function (siteUrl) {
       if (siteUrl) {
@@ -98,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // イベントリスナー
   siteUrlButton.addEventListener('click', getActiveTabUrlAndProcess);
   siteUrlFrom.addEventListener('input', () => {
     const siteUrl = siteUrlFrom.value;
@@ -110,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // 初回処理（タブURLが取得できた場合に実行）
   getActiveTabUrlAndProcess();
 
   setTimeout(() => {
@@ -137,15 +131,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const siteUrl = document.getElementById('site-url-from').value;;
       const baseUrl = new URL(siteUrl).origin;
 
-      // チェックされたラジオボタンの値を取得
       const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
       const img = document.getElementById(`favicon-${size}`);
       const imgUrl = img.src;
-      // console.log("url", url);
 
       if (!imgUrl) return;
 
-      fetch(img.src, { mode: 'cors' }) // CORS対応
+      fetch(img.src, { mode: 'cors' })
         .then(response => response.blob())
         .then(blob => {
           const url = URL.createObjectURL(blob);
@@ -155,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          URL.revokeObjectURL(url); // メモリ解放
+          URL.revokeObjectURL(url);
           messageOutput(dateTime(), `${baseUrl}のサイズ${size}のファビコンをダウンロードしました`);
         })
         .catch(error => {
@@ -171,24 +163,18 @@ document.addEventListener('DOMContentLoaded', function () {
   const titleHeader = document.getElementById('title-header');
   titleHeader.textContent = `Easy Favicon Downloader`;
 
-  // メッセージパネルの表示・非表示を切り替える
   panelButton.addEventListener('click', function () {
-    // メッセージパネルの高さを指定（必要に応じて調整可能）
     const panelHeight = '170px';
 
     if (messagePanel.style.height === panelHeight) {
-      // パネルが開いている場合は閉じる
       messagePanel.style.height = '0';
       panelButton.textContent = 'メッセージパネルを開く';
     } else {
-      // パネルが閉じている場合は開く
       messagePanel.style.height = panelHeight;
       panelButton.textContent = 'メッセージパネルを閉じる';
     }
   });
 
-  // 情報タブ: 
-  // ストアリンクのクリックイベントを設定
   const extensionLink = document.getElementById('extension_link');
   extensionLink.href = `chrome://extensions/?id=${chrome.runtime.id}`;
   if (extensionLink) clickURL(extensionLink);
@@ -196,8 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (issueLink) clickURL(issueLink);
   const storeLink = document.getElementById('store_link');
   if (storeLink) clickURL(storeLink);
-  // manifest.jsonから拡張機能の情報を取得
-  // 各情報をHTML要素に反映
   document.getElementById('extension-id').textContent = `${chrome.runtime.id}`;
   document.getElementById('extension-name').textContent = `${manifestData.name}`;
   document.getElementById('extension-version').textContent = `${manifestData.version}`;
@@ -215,11 +199,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     document.getElementById('site-access').innerHTML = siteAccess;
   });
-  // シークレットモードでのアクセス権を確認し，結果を表示
   chrome.extension.isAllowedIncognitoAccess((isAllowedAccess) => {
     document.getElementById('incognito-enabled').textContent = `${isAllowedAccess ? '有効' : '無効'}`;
   });
-  // GitHubリンクのクリックイベントを設定
   const githubLink = document.getElementById('github-link');
   if (githubLink) clickURL(githubLink);
 
@@ -275,7 +257,6 @@ function getImageMetadata(imageUrl, index) {
           messageOutput(dateTime(), '画像の取得に失敗しました');
         }
       }
-      // 画像のバイナリデータを取得
       return response.arrayBuffer();
     })
     .then(data => {
@@ -286,7 +267,6 @@ function getImageMetadata(imageUrl, index) {
 
       return new Promise((resolve, reject) => {
         img.onload = function () {
-          // 画像の組み込みサイズ（元のファイルサイズ）
           const width = img.width;
           const height = img.height;
           resolve({ width, height });
