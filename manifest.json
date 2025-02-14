@@ -4,9 +4,10 @@
   "version": "0.0.2",
   "description": "WEBサイトのファビコン（Favicon）を簡単にダウンロードできます",
   "icons": {
-    "48": "icons/icon.png"
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
   },
-  "permissions": ["contextMenus", "storage", "tabs"],
+  "permissions": ["storage", "tabs"],
   "action": {
     "default_popup": "popup/popup.html"
   },
