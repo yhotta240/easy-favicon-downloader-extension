@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="title">Sample - サンプル</title>
-  <link rel="stylesheet" href="bootstrap-5.3.0-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="lib/bootstrap-5.3.0-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="popup.css">
 </head>
 
@@ -100,8 +100,11 @@
 
         </li>
         <li class="list-group-item ">
-          <p class="m-0 fw-bold my-2">プレビュー表示</p>
-
+          <div class="d-flex justify-content-between align-items-center my-2">
+            <p class="m-0 fw-bold">プレビュー表示</p>
+            <button type="button" id="download-all-zip" class="btn btn-primary btn-sm">すべてをZIPでダウンロード</button>
+          </div>
+          
           <ul class="list-group">
             <li class="list-group-item d-flex align-items-center">
               <img id="favicon-16" src="" class="border rounded me-3" width="16" height="16">
@@ -512,7 +515,8 @@
   </div>
 
   <!-- スクリプトのリンク -->
-  <script src="bootstrap-5.3.0-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/jszip.min.js"></script>
+  <script src="lib/bootstrap-5.3.0-dist/js/bootstrap.bundle.min.js"></script>
   <script src="popup.js"></script>
   <script src="popup-panel.js"></script>
 </body>

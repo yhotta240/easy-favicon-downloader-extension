@@ -59,6 +59,7 @@ function loading(settings) {
 document.addEventListener('DOMContentLoaded', function () {
   const siteUrlFrom = document.getElementById('site-url-from');
   const siteUrlButton = document.getElementById('site-url-button');
+  const downloadAllZipButton = document.getElementById('download-all-zip');
   function updateFaviconUrls(siteUrl) {
     const faviconBaseUrl = `https://www.google.com/s2/favicons?domain=${siteUrl}&sz=`;
 
@@ -174,6 +175,57 @@ document.addEventListener('DOMContentLoaded', function () {
         messageOutput(dateTime(), `サイズ${size}のファビコンのダウンロードに失敗しました`);
       }
     });
+  });
+
+  // すべてのファビコンをZIPでダウンロードする処理
+  downloadAllZipButton.addEventListener('click', async () => {
+    const fileNameValue = document.getElementById('filename-from').value;
+    const addSizeSuffix = document.getElementById('filename-add-size-checkbox').checked;
+    const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
+    const siteUrl = document.getElementById('site-url-from').value;
+
+    if (!siteUrl) {
+      messageOutput(dateTime(), 'URLが入力されていません。');
+      return;
+    }
+
+    messageOutput(dateTime(), 'ZIPファイルの作成を開始します...');
+    const zip = new JSZip();
+    const promises = [];
+
+    faviconSizes.forEach(size => {
+      const img = document.getElementById(`favicon-${size}`);
+      // プレビューが表示されている画像のみを対象
+      if (img.parentElement.style.visibility !== 'visible') return;
+
+      // ZIPダウンロード時は、ファイル名の重複を避けるため常にサイズを付与する
+      const filename = `${fileNameValue}_${size}x${size}.${fileType}`;
+
+      const promise = fetch(img.src, { mode: 'cors' })
+        .then(response => {
+          if (!response.ok) throw new Error(`Favicon (size: ${size}) fetch failed`);
+          return response.blob();
+        })
+        .then(blob => {
+          // ICO形式の場合は変換処理を行う
+          if (fileType === 'ico') {
+            return convertBlobToIco(blob).then(icoBlob => zip.file(filename, icoBlob));
+          } else {
+            return zip.file(filename, blob);
+          }
+        });
+      promises.push(promise);
+    });
+
+    try {
+      await Promise.all(promises);
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      downloadFavicon(zipBlob, `${fileNameValue}.zip`);
+      messageOutput(dateTime(), 'すべてのファビコンをZIPファイルとしてダウンロードしました。');
+    } catch (error) {
+      console.error('ZIP creation failed:', error);
+      messageOutput(dateTime(), 'ZIPファイルの作成に失敗しました。');
+    }
   });
 
   document.getElementById('title').textContent = `Easy Favicon Downloader`;
@@ -301,6 +353,29 @@ function downloadFavicon(blob, filename) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+/**
+ * BlobをICO形式のBlobに変換します
+ * @param {Blob} blob - 変換元の画像Blob
+ * @returns {Promise<Blob>} ICO形式のBlobオブジェクト
+ */
+function convertBlobToIco(blob) {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const image = new Image();
+
+    image.onload = () => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.drawImage(image, 0, 0);
+      const icoBlob = convertToIco(canvas);
+      resolve(icoBlob);
+    };
+    image.onerror = () => reject(new Error('Image loading for ICO conversion failed'));
+    image.src = URL.createObjectURL(blob);
+  });
 }
 
 /**
