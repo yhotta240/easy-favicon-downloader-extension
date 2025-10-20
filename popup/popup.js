@@ -5,6 +5,7 @@ const fileName = document.getElementById('filename-from');
 const filenameCheckbox = document.getElementById('filename-checkbox');
 const fileTypeRadio = document.querySelectorAll('input[name="filetype-radio"]')
 const filenameAddSize = document.getElementById('filename-add-size-checkbox');
+const icoSizeInfo = document.getElementById('ico-size-info');
 const faviconSizes = [16, 32, 48, 64, 96, 128];
 
 let isSaveFilename = false;
@@ -48,6 +49,8 @@ function loading(settings) {
       settings.fileType = radio.value;
       messageOutput(dateTime(), `ファイル形式: ${radio.value} に変更 `);
       chrome.storage.local.set({ settings: settings });
+
+      icoSizeInfo.style.display = radio.value === 'ico' ? 'block' : 'none';
     });
   });
 }
@@ -121,36 +124,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ファビコンのダウンロード処理
   document.querySelectorAll("a[data-size]").forEach(link => {
-    link.addEventListener("click", (event) => {
+    link.addEventListener("click", async (event) => {
       event.preventDefault();
       const size = link.getAttribute("data-size");
       const fileNameValue = document.getElementById('filename-from').value;
-      const savefilenameAddSize = document.getElementById('filename-add-size-checkbox').checked;
-      const siteUrl = document.getElementById('site-url-from').value;;
-      const baseUrl = new URL(siteUrl).origin;
-
+      const addSizeSuffix = document.getElementById('filename-add-size-checkbox').checked;
+      const siteUrl = document.getElementById('site-url-from').value;
       const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
       const img = document.getElementById(`favicon-${size}`);
-      const imgUrl = img.src;
 
-      if (!imgUrl) return;
+      if (!img.src || !siteUrl) return;
 
-      fetch(img.src, { mode: 'cors' })
-        .then(response => response.blob())
-        .then(blob => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = savefilenameAddSize ? `${fileNameValue}_${size}x${size}.${fileType}` : `${fileNameValue}.${fileType}`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
+      const baseUrl = new URL(siteUrl).origin;
+      const filename = addSizeSuffix ? `${fileNameValue}_${size}x${size}.${fileType}` : `${fileNameValue}.${fileType}`;
+
+      try {
+        const response = await fetch(img.src, { mode: 'cors' });
+        if (!response.ok) throw new Error('Favicon fetch failed');
+        const originalBlob = await response.blob();
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const image = new Image();
+
+        image.onload = () => {
+          canvas.width = image.width;
+          canvas.height = image.height;
+          ctx.drawImage(image, 0, 0);
+
+          if (fileType === 'ico') {
+            const icoBlob = convertToIco(canvas);
+            downloadFavicon(icoBlob, filename);
+          } else {
+            canvas.toBlob(blob => {
+              downloadFavicon(blob, filename);
+            }, `image/${fileType}`);
+          }
           messageOutput(dateTime(), `${baseUrl}のサイズ${size}のファビコンをダウンロードしました`);
-        })
-        .catch(error => {
-          messageOutput(dateTime(), `サイズ${size}のファビコンのダウンロードに失敗しました`);
-        });
+        };
+
+        image.onerror = () => {
+          throw new Error('Image loading failed');
+        };
+
+        image.src = URL.createObjectURL(originalBlob);
+
+      } catch (error) {
+        console.error(error);
+        messageOutput(dateTime(), `サイズ${size}のファビコンのダウンロードに失敗しました`);
+      }
     });
   });
 
@@ -268,4 +290,74 @@ function getImageMetadata(imageUrl, index) {
       // console.error(error);
     })
     ;
+}
+
+function downloadFavicon(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Canvasの画像をICO形式のBlobに変換します
+ * @param {HTMLCanvasElement} canvas - 変換元のCanvas要素
+ * @returns {Blob} ICO形式のBlobオブジェクト
+ */
+function convertToIco(canvas) {
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+  const imageData = ctx.getImageData(0, 0, width, height);
+
+  // ICOヘッダー (6バイト)
+  const header = new Uint8Array([0, 0, 1, 0, 1, 0]);
+
+  // 画像ディレクトリ (16バイト) - 画像のメタデータを格納
+  const dirEntry = new DataView(new ArrayBuffer(16));
+  dirEntry.setUint8(0, width);   // 幅 (0で256を示す)
+  dirEntry.setUint8(1, height);  // 高さ (0で256を示す)
+  dirEntry.setUint8(2, 0);       // カラーパレット数 (0は256色以上)
+  dirEntry.setUint8(3, 0);       // 予約領域 (常に0)
+  dirEntry.setUint16(4, 1, true); // カラープレーン (常に1)
+  dirEntry.setUint16(6, 32, true);// 1ピクセルあたりのビット数
+  const imageSize = width * height * 4 + 40; // DIBヘッダー(40) + ピクセルデータ
+  dirEntry.setUint32(8, imageSize, true); // 画像データサイズ
+  dirEntry.setUint32(12, 22, true); // 画像データオフセット (ヘッダー6バイト + ディレクトリ16バイト)
+
+  // DIB (ビットマップ) ヘッダー (40バイト) - BITMAPINFOHEADER
+  const dibHeader = new DataView(new ArrayBuffer(40));
+  dibHeader.setUint32(0, 40, true); // ヘッダーサイズ
+  dibHeader.setUint32(4, width, true); // 幅
+  dibHeader.setUint32(8, height * 2, true); // 高さ (XORマスクとANDマスクのために2倍にする)
+  dibHeader.setUint16(12, 1, true); // プレーン数 (常に1)
+  dibHeader.setUint16(14, 32, true); // 1ピクセルあたりのビット数
+  dibHeader.setUint32(16, 0, true); // 圧縮形式 (0は無圧縮)
+  dibHeader.setUint32(20, width * height * 4, true); // 画像データサイズ
+  // 残りのヘッダーフィールドは0でよい
+
+  // ICOフォーマットはボトムアップ形式のBGRAピクセルデータを要求する
+  // CanvasのgetImageDataはトップダウン形式のRGBAなので変換が必要
+  const bmpData = new Uint8Array(width * height * 4);
+  const data = imageData.data;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const srcIdx = (y * width + x) * 4;
+      const destIdx = ((height - 1 - y) * width + x) * 4;
+      bmpData[destIdx] = data[srcIdx + 2];     // B (青)
+      bmpData[destIdx + 1] = data[srcIdx + 1]; // G (緑)
+      bmpData[destIdx + 2] = data[srcIdx];     // R (赤)
+      bmpData[destIdx + 3] = data[srcIdx + 3]; // A (アルファ)
+    }
+  }
+
+  // ANDマスク (全ピクセルを不透明にする場合は0で埋める)
+  const andMask = new Uint8Array(Math.ceil(width * height / 8));
+
+  const icoBlob = new Blob([header, new Uint8Array(dirEntry.buffer), new Uint8Array(dibHeader.buffer), bmpData, andMask], { type: 'image/x-icon' });
+  return icoBlob;
 }
