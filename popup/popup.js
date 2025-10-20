@@ -1,6 +1,4 @@
 // 初期化処理
-const panelButton = document.getElementById('panelButton');
-const messagePanel = document.getElementById('messagePanel');
 const messageDiv = document.getElementById('message'); // メッセージ表示用のdiv要素を取得
 const manifestData = chrome.runtime.getManifest();
 const fileName = document.getElementById('filename-from');
@@ -163,18 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const titleHeader = document.getElementById('title-header');
   titleHeader.textContent = `Easy Favicon Downloader`;
 
-  panelButton.addEventListener('click', function () {
-    const panelHeight = '170px';
-
-    if (messagePanel.style.height === panelHeight) {
-      messagePanel.style.height = '0';
-      panelButton.textContent = 'メッセージパネルを開く';
-    } else {
-      messagePanel.style.height = panelHeight;
-      panelButton.textContent = 'メッセージパネルを閉じる';
-    }
-  });
-
   const extensionLink = document.getElementById('extension_link');
   extensionLink.href = `chrome://extensions/?id=${chrome.runtime.id}`;
   if (extensionLink) clickURL(extensionLink);
@@ -219,10 +205,6 @@ function clickURL(link) {
 function messageOutput(datetime, message) {
   messageDiv.innerHTML += '<p class="m-0">' + datetime + ' ' + message + '</p>';
 }
-document.getElementById('messageClearButton').addEventListener('click', () => {
-  messageDiv.innerHTML = '<p class="m-0">' + '' + '</p>';
-});
-
 
 // 現在の時間を取得する
 function dateTime() {
