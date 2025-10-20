@@ -154,12 +154,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  document.getElementById('title').textContent = `Easy Favicon Downloader`;
+  document.getElementById('title-header').textContent = `Easy Favicon Downloader`;
 
-
-  const title = document.getElementById('title');
-  title.textContent = `Easy Favicon Downloader`;
-  const titleHeader = document.getElementById('title-header');
-  titleHeader.textContent = `Easy Favicon Downloader`;
+  const newTabButton = document.getElementById('new-tab-button');
+  newTabButton.addEventListener('click', () => {
+    chrome.tabs.create({ url: 'popup/popup.html' });
+  });
 
   const extensionLink = document.getElementById('extension_link');
   extensionLink.href = `chrome://extensions/?id=${chrome.runtime.id}`;
@@ -173,6 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('extension-version').textContent = `${manifestData.version}`;
   document.getElementById('extension-description').textContent = `${manifestData.description}`;
   chrome.permissions.getAll((result) => {
+    document.getElementById('permission-info').textContent = `${result.permissions.join(', ')}`;
+
     let siteAccess;
     if (result.origins.length > 0) {
       if (result.origins.includes("<all_urls>")) {
@@ -202,6 +205,7 @@ function clickURL(link) {
     });
   }
 }
+
 function messageOutput(datetime, message) {
   messageDiv.innerHTML += '<p class="m-0">' + datetime + ' ' + message + '</p>';
 }
@@ -225,6 +229,7 @@ function getActiveTabUrl(callback) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length === 0) return;
     const url = tabs[0].url;
+    if (!url) return;
     const baseUrl = new URL(url).origin;
     callback(baseUrl);
   });

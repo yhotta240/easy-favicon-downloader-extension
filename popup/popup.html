@@ -9,10 +9,24 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 
-<body class="container pb-3 p-2 ">
-  <div class="d-flex  my-2 " id="header">
-    <img src="../icons/icon.png" class="my-auto mx-2" alt="message clear button" height="28">
-    <h3 class="my-auto fs-3" id="title-header"></h3>
+<body class="container-md pb-3 p-2 ">
+
+  <div class="d-flex justify-content-between  my-2 align-items-center" id="header">
+    <div class="d-flex justify-content-center align-items-center">
+      <img src="../icons/icon.png" class="my-auto mx-2" alt="message clear button" height="28">
+      <h3 class="my-auto fs-3" id="title-header">選択＆カスタム検索</h3>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-light p-1 me-2" id="new-tab-button" aria-label="新しいタブで開く"
+      title="新しいタブで開く">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" id="new-tab-button-icon"
+        class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+        <path fill-rule="evenodd"
+          d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+      </svg>
+    </button>
   </div>
 
   <!-- メニュータブ -->
@@ -20,14 +34,6 @@
     <li class="nav-item " role="presentation">
       <a class="nav-link active p-1" id="download-tabs" data-bs-toggle="tab" href="#download" role="tab"
         aria-controls="download " aria-selected="true">ダウンロード</a>
-    </li>
-    <!-- <li class="nav-item " role="presentation">
-      <a class="nav-link p-1" id="downloads-tabs" data-bs-toggle="tab" href="#downloads" role="tab"
-        aria-controls="downloads" aria-selected="false">一括</a>
-    </li> -->
-    <li class="nav-item" role="presentation">
-      <a class="nav-link p-1" id="description-tab" data-bs-toggle="tab" href="#description" role="tab"
-        aria-controls="description" aria-selected="false">概要</a>
     </li>
     <li class="nav-item " role="presentation">
       <a class="nav-link p-1" id="document-tab" data-bs-toggle="tab" href="#document" role="tab"
@@ -62,6 +68,12 @@
               ファイル名を記憶する
             </label>
           </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="filename-add-size-checkbox">
+            <label class="form-check-label" for="filename-add-size-checkbox">
+              ファイル名の末尾にサイズを付ける
+            </label>
+          </div>
 
           <p class="m-0 fw-bold me-3 mt-2">ファイル形式</p>
           <div class="">
@@ -86,13 +98,6 @@
         </li>
         <li class="list-group-item ">
           <p class="m-0 fw-bold my-2">プレビュー表示</p>
-
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="filename-add-size-checkbox">
-            <label class="form-check-label" for="filename-add-size-checkbox">
-              ファイル名の末尾にサイズを付ける
-            </label>
-          </div>
 
           <ul class="list-group">
             <li class="list-group-item d-flex align-items-center">
@@ -179,105 +184,103 @@
       </ul>
     </div>
 
-    <!-- 一括 -->
-    <div class="tab-pane fade mt-2 mx-2" id="downloads" role="tabpanel" style="margin-bottom: 200px;"
-      aria-labelledby="downloads-tab">
-
-    </div>
-
-    <!-- 概要 -->
-    <div class="tab-pane fade mt-2 mx-2" id="description" role="tabpanel" style="margin-bottom: 200px;"
-      aria-labelledby="description-tab">
-      <div class="p-2">
-        <h5>概要</h5>
-        <p>WEBサイトのファビコン（Favicon）を簡単にダウンロードできます</p>
-        <p class="my-1 fw-bold">説明:</p>
-        <p>
-          WEBサイトのファビコン（Favicon）を取得し，簡単にダウンロードできます．指定した URL のファビコンを複数のサイズで表示し，好みの形式（PNG，JPG，ICO）で保存可能です．
-        </p>
-        <p class="my-1 fw-bold">拡張機能の主な特徴:</p>
-        <div class="mt-1">
-          <ul>
-            <li>
-              ファビコンの取得: 指定したWEBサイトのファビコンを自動で取得し，表示します．
-            </li>
-            <li>
-              複数サイズ対応: 16px，32px，48px，64px，96px，128px など，さまざまなサイズのファビコンを取得可能．
-            </li>
-            <li>
-              形式の選択: PNG / JPG / ICO 形式でダウンロード可能．
-            </li>
-            <li>
-              アクティブタブの自動取得: 現在開いているWEBサイトのファビコンをワンクリックで取得できる．
-            </li>
-            <li>
-              手動URL入力対応: 任意の URL を入力してファビコンを取得することも可能．
-            </li>
-          </ul>
-        </div>
-        <p class="my-1 fw-bold">注意点:</p>
-
-        <div class="mt-1">
-          <ul>
-            <li>
-              ⚠ Google の Favicon API 依存: Google のファビコン取得API（<a href="https://www.google.com/s2/favicons" target="_blank"
-                class="text-wrap">https://www.google.com/s2/favicons</a>）を使用しているため，一部のサイトでは正確なファビコンが取得できない可能性があります．
-            </li>
-            <li>
-              ⚠ Webサイトによる制約: 特定のサイトではファビコンのサイズやフォーマットが制限されている場合があります．
-            </li>
-            <li>
-              ⚠ ブラウザの権限設定: アクティブなタブの URL を取得するための権限を最小限に抑えていますが，一部の環境では動作しない可能性があります．
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-
-
     <!-- ドキュメント -->
     <div class="tab-pane fade mt-2 mx-2" id="document" role="tabpanel" style="margin-bottom: 200px;"
       aria-labelledby="document-tab">
-      <div class="accordion" id="accordion-word">
+      <div class="accordion" id="accordion">
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-              用語集
+              data-bs-target="#doc-overview" aria-expanded="false" aria-controls="doc-overview">
+              概要
             </button>
           </h2>
-          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body p-1 pt-3">
-              <ul class="">
-                <li class="mb-1">
-                  <div class="fw-bold">ファビコン：favicon</div>
-                  ブラウザのタブや検索結果画面に表示される小さなアイコンのことを指す．「favorite icon（お気に入りのアイコン）」の略称．
-                </li>
-                <li class="mb-1">
-                  <div class="fw-bold">PNG（Portable Network Graphics）: </div>
-                  透過背景をサポートする画像形式
-                </li>
-                <li class="mb-1">
-                  <div class="fw-bold">JPG（JPEG, Joint Photographic Experts Group）：</div>
-                  圧縮率が高く，写真などに適した画像形式
-                </li>
-                <li class="mb-1">
-                  <div class="fw-bold">ICO（Icon File）: </div>
-                  Windows でアイコンとして使用されるファイル形式
-                </li>
-              </ul>
+          <div id="doc-overview" class="accordion-collapse collapse" data-bs-parent="#accordion">
+            <div class="accordion-body p-3">
+              <p>WEBサイトのファビコン（Favicon）を簡単にダウンロードできます</p>
+              <p class="my-1 fw-bold">説明:</p>
+              <p>
+                WEBサイトのファビコン（Favicon）を取得し，簡単にダウンロードできます．指定した URL のファビコンを複数のサイズで表示し，好みの形式（PNG，JPG，ICO）で保存可能です．
+              </p>
+              <p class="my-1 fw-bold">拡張機能の主な特徴:</p>
+              <div class="mt-1">
+                <ul>
+                  <li>
+                    ファビコンの取得: 指定したWEBサイトのファビコンを自動で取得し，表示します．
+                  </li>
+                  <li>
+                    複数サイズ対応: 16px，32px，48px，64px，96px，128px など，さまざまなサイズのファビコンを取得可能．
+                  </li>
+                  <li>
+                    形式の選択: PNG / JPG / ICO 形式でダウンロード可能．
+                  </li>
+                  <li>
+                    アクティブタブの自動取得: 現在開いているWEBサイトのファビコンをワンクリックで取得できる．
+                  </li>
+                  <li>
+                    手動URL入力対応: 任意の URL を入力してファビコンを取得することも可能．
+                  </li>
+                </ul>
+              </div>
+              <p class="my-1 fw-bold">注意点:</p>
+
+              <div class="mt-1">
+                <ul>
+                  <li>
+                    ⚠ Google の Favicon API 依存: Google のファビコン取得API（<a href="https://www.google.com/s2/favicons"
+                      target="_blank"
+                      class="text-wrap">https://www.google.com/s2/favicons</a>）を使用しているため，一部のサイトでは正確なファビコンが取得できない可能性があります．
+                  </li>
+                  <li>
+                    ⚠ Webサイトによる制約: 特定のサイトではファビコンのサイズやフォーマットが制限されている場合があります．
+                  </li>
+                  <li>
+                    ⚠ ブラウザの権限設定: アクティブなタブの URL を取得するための権限を最小限に抑えていますが，一部の環境では動作しない可能性があります．
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
         <div class="accordion-item">
           <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOTwo"
-              aria-expanded="true" aria-controls="collapseTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#doc-word" aria-expanded="false" aria-controls="doc-word">
+              用語について
+            </button>
+          </h2>
+          <div id="doc-word" class="accordion-collapse collapse" data-bs-parent="#accordion">
+            <div class="accordion-body p-1 pt-3">
+              <ul class="">
+                <li class="mb-1">
+                  <div class="fw-bold">ファビコン（favicon）：</div>
+                  WebサイトやWebページを識別するための小さなアイコン．ブラウザのタブやブックマーク，検索結果などに表示される．「favorite icon（お気に入りアイコン）」を略したもの．
+                </li>
+                <li class="mb-1">
+                  <div class="fw-bold">PNG（Portable Network Graphics）：</div>
+                  可逆圧縮を採用し，透過背景をサポートする画像形式．ロゴやイラストなどに適している．
+                </li>
+                <li class="mb-1">
+                  <div class="fw-bold">JPEG（Joint Photographic Experts Group，拡張子：.jpg/.jpeg）：</div>
+                  非可逆圧縮を採用した画像形式で，写真などのフルカラー画像に適している．
+                </li>
+                <li class="mb-1">
+                  <div class="fw-bold">ICO（Icon File）：</div>
+                  主に Windows で使用されるアイコン用のファイル形式．複数の解像度や色深度のアイコン画像を1つのファイルにまとめて格納できる．
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#doc-tutorial"
+              aria-expanded="true" aria-controls="doc-tutorial">
               チュートリアル
             </button>
           </h2>
-          <div id="collapseOTwo" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div id="doc-tutorial" class="accordion-collapse collapse show" data-bs-parent="#accordion">
             <div class="accordion-body p-3">
               <p class="mb-2 fw-bold">
                 1. Chrome ウェブストアから拡張機能をインストール
@@ -367,13 +370,13 @@
           <p class="m-0" id="extension-id"></p>
         </li>
         <li class="list-group-item">
-          <p>権限</p>
+          <p class="m-0">権限</p>
+          <p class="m-0" id="permission-info"></p>
         </li>
         <li class="list-group-item">
-          <p>サイトへのアクセス:</p>
-          <p id="permission-info">アクセスしたWEBサイト上にある自分の全データの読み取りと変更をこの拡張機能に許可します。</p>
+          <p class="m-0">サイトへのアクセス:</p>
+          <p class="m-0 py-1">アクセスしたウェブサイト上にある自分の全データの読み取りと変更をこの拡張機能に許可します．</p>
           <span id="site-access">Checking...</span>
-        </li>
         </li>
         <li class="list-group-item">
           <p class="m-0">シークレット モードでの実行を許可する: </p>

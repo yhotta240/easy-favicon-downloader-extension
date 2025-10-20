@@ -1,20 +1,24 @@
 html {
   font-size: 0.8rem;
+  width: 30rem;
 }
 
-html,
-body {
-  width: 28rem;
-  min-width: 28rem;
-  margin: 0;
+@media (min-width: 30rem) {
+  html {
+    width: auto !important;
+  }
 }
 
-#panel {
-  height: 0;
-  overflow: hidden;
-  transition: height 0.3s ease;
-}
+@media (min-width: 768px) {
+  html {
+    font-size: 0.9rem;
+  }
 
-#panel.no-transition {
-  transition: none !important;
+  .container-md {
+    max-width: 720px !important;
+  }
+
+  .table-responsive {
+    overflow-x: visible !important;
+  }
 }
