@@ -59,6 +59,20 @@
             <button type="button" id="site-url-button" class="btn btn-outline-secondary btn-sm ">現在のサイト</button>
           </div>
 
+          <p class="m-0 fw-bold mt-2">取得方法</p>
+          <div class="">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input " type="radio" name="fetch-method-radio" id="google-api-radio"
+                value="google">
+              <label class="form-check-label" for="google-api-radio">Google Favicon API</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input " type="radio" name="fetch-method-radio" id="meta-tag-radio"
+                value="meta">
+              <label class="form-check-label" for="meta-tag-radio">サイトから直接取得する</label>
+            </div>
+          </div>
+
           <p class="m-0 fw-bold mt-2">ファイル名:</p>
           <input class="form-control form-control-sm" type="text" placeholder="ファイル名を入力"
             aria-label=".form-control-sm example" id="filename-from">
@@ -108,85 +122,8 @@
             <button type="button" id="download-all-zip" class="btn btn-primary btn-sm">すべてをZIPでダウンロード</button>
           </div>
 
-          <ul class="list-group">
-            <li class="list-group-item d-flex align-items-center">
-              <img id="favicon-16" src="" class="border rounded me-3" width="16" height="16">
-              <span class="flex-grow-1">16x16</span>
-              <a href="#" data-size="16" class="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-download" viewBox="0 0 16 16">
-                  <path
-                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path
-                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
-              </a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <img id="favicon-32" src="" class="border rounded me-3" width="32" height="32">
-              <span class="flex-grow-1">32x32</span>
-              <a href="#" data-size="32" class="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-download" viewBox="0 0 16 16">
-                  <path
-                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path
-                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
-              </a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <img id="favicon-48" src="" class="border rounded me-3" width="48" height="48">
-              <span class="flex-grow-1">48×48</span>
-              <a href="#" data-size="48" class="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-download" viewBox="0 0 16 16">
-                  <path
-                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path
-                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
-              </a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <img id="favicon-64" src="" class="border rounded me-3" width="64" height="64">
-              <span class="flex-grow-1">64x64</span>
-              <a href="#" data-size="64" class="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-download" viewBox="0 0 16 16">
-                  <path
-                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path
-                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
-              </a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <img id="favicon-96" src="" class="border rounded me-3" width="96" height="96">
-              <span class="flex-grow-1">96x96</span>
-              <a href="#" data-size="96" class="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-download" viewBox="0 0 16 16">
-                  <path
-                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path
-                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
-              </a>
-            </li>
-            <li class="list-group-item d-flex align-items-center">
-              <img id="favicon-128" src="" class="border rounded me-3" width="128" height="128">
-              <span class="flex-grow-1">128x128</span>
-              <a href="#" data-size="128" class="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-download" viewBox="0 0 16 16">
-                  <path
-                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path
-                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
-              </a>
-            </li>
+          <ul class="list-group" id="preview-list">
+            <!-- プレビューアイテムはJavaScriptによって動的に生成されます -->
           </ul>
 
         </li>
