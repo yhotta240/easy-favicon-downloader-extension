@@ -96,6 +96,11 @@ function toggleDownloadLink() {
 
 /** 各サイズのファビコンを取得 */
 function updateFaviconUrls(siteUrl) {
+  if (!siteUrl.startsWith('http://') && !siteUrl.startsWith('https://')) {
+    messageOutput(dateTime(), '正しいURLではありません');
+    return;
+  }
+
   const previews = document.getElementById(`preview-list`);
   Array.from(previews.children).forEach((child) => child.classList.add('d-none'));
 
@@ -174,7 +179,6 @@ async function updateFaviconUrlsFromGoogle(siteUrl) {
 /** 各サイズのファビコンをサイトから直接取得 */
 async function updateFaviconUrlsFromMeta(siteUrl) {
   const previewList = document.getElementById('preview-list');
-
   // 既存のプレビューをクリアし，ローディングスピナーを表示
   previewList.innerHTML = `
     <li class="list-group-item text-center" id="loading-spinner">
