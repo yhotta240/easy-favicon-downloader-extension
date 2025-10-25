@@ -7,6 +7,7 @@ const fileTypeRadio = document.querySelectorAll('input[name="filetype-radio"]')
 const fetchMethodRadio = document.querySelectorAll('input[name="fetch-method-radio"]');
 const filenameAddSize = document.getElementById('filename-add-size-checkbox');
 const icoSizeInfo = document.getElementById('ico-size-info');
+const downloadAllZipButton = document.getElementById('download-all-zip');
 const faviconSizes = [16, 32, 48, 64, 96, 128];
 
 let isSaveFilename = false;
@@ -44,24 +45,22 @@ function loading(settings) {
     chrome.storage.local.set({ settings: settings });
   });
 
-  document.getElementById('download-all-zip').style.display = fileType === 'ico' ? 'none' : 'block';
-  document.querySelectorAll('a[data-size]').forEach(link => link.style.display = fileType === 'ico' ? 'none' : 'block');
-  icoSizeInfo.style.display = fileType === 'ico' ? 'block' : 'none';
+  toggleDownloadButton(fileType);
+  const links = document.querySelectorAll('a[data-size]');
+  links.forEach(link => link.classList.toggle('d-none', fileType === 'ico'));
 
   fileTypeRadio.forEach((radio) => {
-    if (radio.value === fileType) {
-      radio.checked = true;
-    }
+    if (radio.value === fileType) radio.checked = true;
+
     radio.addEventListener('change', () => {
       settings.fileType = radio.value;
       messageOutput(dateTime(), `ファイル形式: ${radio.value} に変更 `);
       chrome.storage.local.set({ settings: settings });
 
       // ICO選択時，個別ダウンロードリンクとZIPダウンロードボタンを非表示にし，ICO一括ダウンロードボタンを表示
-      document.getElementById('download-all-zip').style.display = radio.value === 'ico' ? 'none' : 'block';
-      document.querySelectorAll('a[data-size]').forEach(link => link.style.display = radio.value === 'ico' ? 'none' : 'block');
-
-      icoSizeInfo.style.display = radio.value === 'ico' ? 'block' : 'none';
+      toggleDownloadButton(radio.value);
+      const links = document.querySelectorAll('a[data-size]');
+      links.forEach(link => link.classList.toggle('d-none', radio.value === 'ico'));
     });
   });
 
@@ -82,6 +81,17 @@ function loading(settings) {
       }
     });
   });
+}
+
+function toggleDownloadButton(fileType) {
+  downloadAllZipButton.classList.toggle('d-none', fileType === 'ico');
+  icoSizeInfo.classList.toggle('d-none', fileType !== 'ico');
+}
+
+function toggleDownloadLink() {
+  const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
+  const links = document.querySelectorAll('a[data-size]');
+  links.forEach(link => link.classList.toggle('d-none', fileType === 'ico'));
 }
 
 /** 各サイズのファビコンを取得 */
@@ -115,7 +125,7 @@ async function updateFaviconUrlsFromGoogle(siteUrl) {
     const faviconPromises = faviconSizes.map(async (size) => {
       const faviconUrl = `${faviconBaseUrl}${size}`;
       const meta = await getImageMetadata(faviconUrl);
-      // 取得した画像のサイズが期待通りか、またはデフォルトの16x16かチェック
+      // 取得した画像のサイズが期待通りか，またはデフォルトの16x16かチェック
       if (meta && (meta.width === size || (size === 16 && meta.width > 0))) {
         return { url: faviconUrl, ...meta };
       }
@@ -137,7 +147,7 @@ async function updateFaviconUrlsFromGoogle(siteUrl) {
     previewList.innerHTML = '';
 
     if (uniqueFavicons.size === 0) {
-      messageOutput(dateTime(), 'Google APIから表示可能なファビコンが見つかりませんでした。');
+      messageOutput(dateTime(), 'Google APIから表示可能なファビコンが見つかりませんでした．');
       return;
     }
 
@@ -148,9 +158,11 @@ async function updateFaviconUrlsFromGoogle(siteUrl) {
         addPreviewItem(favicon.width, favicon.height, favicon.url);
       });
 
+    toggleDownloadLink();
+
   } catch (error) {
-    console.error('Google APIからのファビコン取得に失敗:', error);
-    messageOutput(dateTime(), 'Google APIからのファビコン取得に失敗しました。');
+    console.warn('Google APIからのファビコン取得に失敗:', error);
+    messageOutput(dateTime(), 'Google APIからのファビコン取得に失敗しました．');
   } finally {
     const spinner = document.getElementById('loading-spinner');
     if (spinner) {
@@ -163,7 +175,7 @@ async function updateFaviconUrlsFromGoogle(siteUrl) {
 async function updateFaviconUrlsFromMeta(siteUrl) {
   const previewList = document.getElementById('preview-list');
 
-  // 既存のプレビューをクリアし、ローディングスピナーを表示
+  // 既存のプレビューをクリアし，ローディングスピナーを表示
   previewList.innerHTML = `
     <li class="list-group-item text-center" id="loading-spinner">
       <div class="spinner-border text-primary" role="status">
@@ -181,7 +193,7 @@ async function updateFaviconUrlsFromMeta(siteUrl) {
     const links = doc.querySelectorAll('link[rel*="icon"]');
 
     if (links.length === 0) {
-      messageOutput(dateTime(), 'メタタグからファビコンが見つかりませんでした。Google APIを試します。');
+      messageOutput(dateTime(), 'メタタグからファビコンが見つかりませんでした．Google APIを試します．');
       // ローディング表示を消してからGoogle APIを呼び出す
       previewList.innerHTML = '';
       updateFaviconUrlsFromGoogle(siteUrl); // 見つからなければGoogle APIにフォールバック
@@ -201,11 +213,11 @@ async function updateFaviconUrlsFromMeta(siteUrl) {
     }).filter(Boolean);
 
     if (faviconUrls.length === 0) {
-      messageOutput(dateTime(), '有効なファビコンURLが見つかりませんでした。');
+      messageOutput(dateTime(), '有効なファビコンURLが見つかりませんでした．');
       return;
     }
 
-    messageOutput(dateTime(), `${faviconUrls.length}個のファビコン候補をメタタグから見つけました。`);
+    messageOutput(dateTime(), `${faviconUrls.length}個のファビコン候補をメタタグから見つけました．`);
 
     // 各サイズのファビコン情報を取得し，重複を除外する
     const faviconPromises = faviconUrls.map(async (url) => {
@@ -231,9 +243,11 @@ async function updateFaviconUrlsFromMeta(siteUrl) {
     sortedFavicons.forEach(favicon => {
       addPreviewItem(favicon.width, favicon.height, favicon.url);
     });
+
+    toggleDownloadLink();
   } catch (error) {
-    console.error('メタタグからのファビコン取得に失敗:', error);
-    messageOutput(dateTime(), `サイトのHTML取得に失敗しました。URLが正しいか確認してください。`);
+    console.warn('メタタグからのファビコン取得に失敗:', error);
+    messageOutput(dateTime(), `サイトのHTML取得に失敗しました．URLが正しいか確認してください．`);
   } finally {
     const spinner = document.getElementById('loading-spinner');
     if (spinner) {
@@ -332,7 +346,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // ファビコンのダウンロード処理
   document.getElementById('preview-list').addEventListener('click', async (event) => {
     const downloadLink = event.target.closest('.download-link');
-    console.log(downloadLink.dataset.url);
     if (downloadLink) {
       event.preventDefault();
       const faviconUrl = downloadLink.dataset.url;
@@ -387,52 +400,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // すべてのファビコンをZIPでダウンロードする処理
   downloadAllZipButton.addEventListener('click', async () => {
-    const fileNameValue = document.getElementById('filename-from').value;
-    const addSizeSuffix = document.getElementById('filename-add-size-checkbox').checked;
-    const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
     const siteUrl = document.getElementById('site-url-from').value;
-
     if (!siteUrl) {
-      messageOutput(dateTime(), 'URLが入力されていません。');
+      messageOutput(dateTime(), 'URLが入力されていません．');
       return;
     }
 
+    const imageElements = document.querySelectorAll('#preview-list img');
+    if (imageElements.length === 0) {
+      messageOutput(dateTime(), 'ダウンロード対象のファビコンがありません．');
+      return;
+    }
+
+    const fileNameValue = document.getElementById('filename-from').value;
+    const fileType = document.querySelector('input[name="filetype-radio"]:checked').value;
+
     messageOutput(dateTime(), 'ZIPファイルの作成を開始します...');
     const zip = new JSZip();
-    const promises = [];
-
-    faviconSizes.forEach(size => {
-      const img = document.getElementById(`favicon-${size}`);
-      // プレビューが表示されている画像のみを対象
-      if (img.parentElement.style.visibility !== 'visible') return;
-
-      // ZIPダウンロード時は、ファイル名の重複を避けるため常にサイズを付与する
-      const filename = `${fileNameValue}_${size}x${size}.${fileType}`;
-
-      const promise = fetch(img.src, { mode: 'cors' })
-        .then(response => {
-          if (!response.ok) throw new Error(`Favicon (size: ${size}) fetch failed`);
-          return response.blob();
-        })
-        .then(blob => {
-          // ICO形式の場合は変換処理を行う
-          if (fileType === 'ico') {
-            return convertBlobToIco(blob).then(icoBlob => zip.file(filename, icoBlob));
-          } else {
-            return zip.file(filename, blob);
-          }
-        });
-      promises.push(promise);
-    });
 
     try {
-      await Promise.all(promises);
+      for (const img of imageElements) {
+        const size = img.parentElement.querySelector('span').textContent; // "16x16" などを取得
+        const faviconUrl = img.src;
+        // ZIPダウンロード時は，ファイル名の重複を避けるため常にサイズを付与する
+        const filename = `${fileNameValue}_${size}.${fileType}`;
+
+        const response = await fetch(faviconUrl, { mode: 'cors' });
+        if (!response.ok) {
+          console.warn(`Favicon (size: ${size}) fetch failed`);
+          continue; // 失敗した場合はスキップ
+        }
+        const blob = await response.blob();
+
+        // ICO形式の場合は変換処理を行う
+        const fileBlob = fileType === 'ico' ? await convertBlobToIco(blob) : blob;
+        zip.file(filename, fileBlob);
+      }
+
       const zipBlob = await zip.generateAsync({ type: "blob" });
       downloadFavicon(zipBlob, `${fileNameValue}.zip`);
-      messageOutput(dateTime(), 'すべてのファビコンをZIPファイルとしてダウンロードしました。');
+      messageOutput(dateTime(), 'すべてのファビコンをZIPファイルとしてダウンロードしました．');
     } catch (error) {
       console.error('ZIP creation failed:', error);
-      messageOutput(dateTime(), 'ZIPファイルの作成に失敗しました。');
+      messageOutput(dateTime(), 'ZIPファイルの作成に失敗しました．');
     }
   });
 
@@ -442,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const siteUrl = document.getElementById('site-url-from').value;
 
     if (!siteUrl) {
-      messageOutput(dateTime(), 'URLが入力されていません。');
+      messageOutput(dateTime(), 'URLが入力されていません．');
       return;
     }
 
@@ -450,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const imageElements = document.querySelectorAll('#preview-list img');
     if (imageElements.length === 0) {
-      messageOutput(dateTime(), 'ダウンロード対象のファビコンがありません。');
+      messageOutput(dateTime(), 'ダウンロード対象のファビコンがありません．');
       return;
     }
 
@@ -504,15 +514,15 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       await Promise.all(promises);
       if (canvases.length === 0) {
-        messageOutput(dateTime(), 'ICOに変換できる画像がありませんでした。');
+        messageOutput(dateTime(), 'ICOに変換できる画像がありませんでした．');
         return;
       }
       const icoBlob = await convertToIco(canvases);
       downloadFavicon(icoBlob, `${fileNameValue}.ico`);
-      messageOutput(dateTime(), 'すべてのファビコンを1つのICOファイルとしてダウンロードしました。');
+      messageOutput(dateTime(), 'すべてのファビコンを1つのICOファイルとしてダウンロードしました．');
     } catch (error) {
       console.error('ICO creation failed:', error);
-      messageOutput(dateTime(), 'ICOファイルの作成に失敗しました。');
+      messageOutput(dateTime(), 'ICOファイルの作成に失敗しました．');
     }
   });
 
@@ -597,7 +607,7 @@ function getActiveTabUrl(callback) {
   });
 }
 
-function getImageMetadata(imageUrl) {
+async function getImageMetadata(imageUrl) {
   return fetch(imageUrl)
     .then(response => {
       if (!response.ok) {
